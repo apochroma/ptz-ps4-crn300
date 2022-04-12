@@ -26,9 +26,6 @@ i = 4
 speed = 0
 
 def inc_speed(*args):
-	#read speed
-	#enumerate index of speed
-	#do calc do count
 	global i
 	global speed
 	if i < len(speed_list)-1: # i <= 7
@@ -43,9 +40,6 @@ def inc_speed(*args):
 	return (speed, i)
 
 def dec_speed(*args):
-	#read speed
-	#enumerate index of speed
-	#do calc do count
 	global i
 	global speed
 	if i > 0:
@@ -82,10 +76,10 @@ class MyController(Controller):
 		Controller.__init__(self, **kwargs)
 
 	def on_right_arrow_press(self):
+		control_ptz(inc_speed(i))
+		
+	def on_right_arrow_release(self):
 		inc_speed(i)
-		#print(i)
-		#print(speed)
-		#print(str(i) + " multiplied with " + str(speed) + " results in " + str(speed*i))
 
 	def on_left_arrow_press(self):
 		dec_speed(i)
@@ -132,6 +126,7 @@ class MyController(Controller):
 		print("Move PTZ camera left")
 
 	def on_L3_left(self):
+		
 		arg1 = "pan=left&pan.speed.mode.list=auto2" 
 		arg2 = ""
 		control_ptz(arg1, arg2)
