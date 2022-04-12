@@ -21,11 +21,15 @@ else:
 
 from pyPS4Controller.controller import Controller
 
-speed_list = [10, 75, 300, 600, 1250, 2500, 5000, 10000]
+ip = "10.10.10.100"
+speed_list = [10, 40, 75, 300, 600, 1250, 2500, 5000, 7500, 10000]
 i = 4
 speed = 0
 
 def inc_speed(*args):
+	#read speed
+	#enumerate index of speed
+	#do calc do count
 	global i
 	global speed
 	if i < len(speed_list)-1: # i <= 7
@@ -40,6 +44,9 @@ def inc_speed(*args):
 	return (speed, i)
 
 def dec_speed(*args):
+	#read speed
+	#enumerate index of speed
+	#do calc do count
 	global i
 	global speed
 	if i > 0:
@@ -74,12 +81,30 @@ class MyController(Controller):
 
 	def __init__(self, **kwargs):
 		Controller.__init__(self, **kwargs)
+		self.last_value = 0
+
+	def on_R3_up(self, value):
+		
+		if self.last_value == value:
+			return
+		self.last_value = value
+		
+		speed_index = value / (32767 / (len(speed_list)-2))*-1
+		print("value: " +str(value)+ " speed index: " +str(speed_index))
+		#print(speed)
+		pt_speed = speed_list[speed_index]
+		direction = "&tilt=up"
+		pt_speed = "&tilt.speed=" + str(pt_speed)
+
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
+		print(url)
+		command = urlopen(url).read()
 
 	def on_right_arrow_press(self):
-		control_ptz(inc_speed(i))
-		
-	def on_right_arrow_release(self):
 		inc_speed(i)
+		#print(i)
+		#print(speed)
+		#print(str(i) + " multiplied with " + str(speed) + " results in " + str(speed*i))
 
 	def on_left_arrow_press(self):
 		dec_speed(i)
@@ -126,7 +151,6 @@ class MyController(Controller):
 		print("Move PTZ camera left")
 
 	def on_L3_left(self):
-		
 		arg1 = "pan=left&pan.speed.mode.list=auto2" 
 		arg2 = ""
 		control_ptz(arg1, arg2)
