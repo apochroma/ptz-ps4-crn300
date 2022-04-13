@@ -72,7 +72,14 @@ def control_ptz(arg1, arg2):
 	print(url)
 	command = urlopen(url).read()
 
-
+def calculate(value):
+	if value < 0:
+		value = int((-1 * value - 1.0) / (32767 / len(speed_list)))
+	else:
+		value = int((value - 1.0) / (32767 / len(speed_list)))
+	if value == len(speed_list):
+		value -= 1
+	return value
 
 	#print("Speedlist is: " + str(speed_list()))
 	#print("Speed Index 0 is: " + str(speed_list([0])))
@@ -84,68 +91,77 @@ class MyController(Controller):
 		self.last_value = 0
 
 	def on_R3_up(self, value):
+		value = calculate(value)
 		if self.last_value == value:
 			return
 		self.last_value = value
-		speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		if speed_index == len(speed_list): speed_index -= 1
+		
+		speed_index = value
+		#speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&tilt=up"
 		pt_speed = "&tilt.speed=" + str(pt_speed)
 		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
 		command = urlopen(url).read()
-		print(url)
+		#print(url)
 
 	def on_R3_down(self, value):
+		value = calculate(value)
 		if self.last_value == value:
 			return
 		self.last_value = value
-		speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		if speed_index == len(speed_list): speed_index -= 1
+		speed_index = value
+		#speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&tilt=down"
 		pt_speed = "&tilt.speed=" + str(pt_speed)
 		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
 		command = urlopen(url).read()
-		print(url)
+		#print(url)
 
 	def on_R3_left(self, value):
+		value = calculate(value)
 		if self.last_value == value:
 			return
 		self.last_value = value
-		speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		if speed_index == len(speed_list): speed_index -= 1
+		speed_index = value
+		#speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&pan=left"
 		pt_speed = "&pan.speed=" + str(pt_speed)
 		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
 		command = urlopen(url).read()
-		print(url)
+		#print(url)
 
 	def on_R3_right(self, value):
+		value = calculate(value)
 		if self.last_value == value:
 			return
 		self.last_value = value
-		speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		if speed_index == len(speed_list): speed_index -= 1
+		speed_index = value
+		#speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&pan=right"
 		pt_speed = "&pan.speed=" + str(pt_speed)
 		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
 		command = urlopen(url).read()
-		print(url)
+		#print(url)
 
 	def on_R3_x_at_rest(self):
 		direction = "pan=stop&tilt=stop"
 		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction
 		command = urlopen(url).read()
-		print(url)
+		#print(url)
 
 	def on_R3_y_at_rest(self):
 		direction = "pan=stop&tilt=stop"
 		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction
 		command = urlopen(url).read()
-		print(url)
+		#print(url)
 
 	def on_right_arrow_press(self):
 		inc_speed(i)
