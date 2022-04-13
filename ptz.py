@@ -84,21 +84,68 @@ class MyController(Controller):
 		self.last_value = 0
 
 	def on_R3_up(self, value):
-		
 		if self.last_value == value:
 			return
 		self.last_value = value
-		
-		speed_index = value / (32767 / (len(speed_list)-2))*-1
-		print("value: " +str(value)+ " speed index: " +str(speed_index))
-		#print(speed)
+		speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&tilt=up"
 		pt_speed = "&tilt.speed=" + str(pt_speed)
-
 		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
-		print(url)
 		command = urlopen(url).read()
+		print(url)
+
+	def on_R3_down(self, value):
+		if self.last_value == value:
+			return
+		self.last_value = value
+		speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		if speed_index == len(speed_list): speed_index -= 1
+		pt_speed = speed_list[speed_index]
+		direction = "&tilt=down"
+		pt_speed = "&tilt.speed=" + str(pt_speed)
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
+		command = urlopen(url).read()
+		print(url)
+
+	def on_R3_left(self, value):
+		if self.last_value == value:
+			return
+		self.last_value = value
+		speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		if speed_index == len(speed_list): speed_index -= 1
+		pt_speed = speed_list[speed_index]
+		direction = "&pan=left"
+		pt_speed = "&pan.speed=" + str(pt_speed)
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
+		command = urlopen(url).read()
+		print(url)
+
+	def on_R3_right(self, value):
+		if self.last_value == value:
+			return
+		self.last_value = value
+		speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
+		if speed_index == len(speed_list): speed_index -= 1
+		pt_speed = speed_list[speed_index]
+		direction = "&pan=right"
+		pt_speed = "&pan.speed=" + str(pt_speed)
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
+		command = urlopen(url).read()
+		print(url)
+
+	def on_R3_x_at_rest(self):
+		direction = "pan=stop&tilt=stop"
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction
+		command = urlopen(url).read()
+		print(url)
+
+	def on_R3_y_at_rest(self):
+		direction = "pan=stop&tilt=stop"
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction
+		command = urlopen(url).read()
+		print(url)
 
 	def on_right_arrow_press(self):
 		inc_speed(i)
@@ -173,7 +220,6 @@ class MyController(Controller):
 		arg2 = ""
 		control_ptz(arg1, arg2)
 		print("Stop PTZ camera")
-
 	
 	def on_L2_press(self, value):
 		arg1 = "zoom=tele" 
@@ -186,57 +232,6 @@ class MyController(Controller):
 		arg2 = "" 
 		control_ptz(arg1, arg2)
 		print("Zoom Stop")
-
-	"""
-	def on_L2_press(self, value):
-		global speed
-		speed = 0
-		value = int((value + 32767) / 2184.46) # result 1-30
-		if value == 30: speed = 9900
-		if value == 29: speed = 7000
-		if value == 28: speed = 5000
-		if value == 27: speed = 3000
-		if value == 26: speed = 2000
-		if value == 25: speed = 1000
-		if value == 24: speed = 750
-		if value == 23: speed = 500
-		if value == 22: speed = 400
-		if value == 21: speed = 300
-		if value == 20: speed = 250
-		if value == 19: speed = 200
-		if value == 18: speed = 150
-		if value == 17: speed = 100
-		if value == 16: speed = 90
-		if value == 15: speed = 80
-		if value == 14: speed = 70
-		if value == 13: speed = 60
-		if value == 12: speed = 50
-		if value == 11: speed = 45
-		if value == 10: speed = 40
-		if value == 9: speed = 35
-		if value == 8: speed = 30
-		if value == 7: speed = 25
-		if value == 6: speed = 22
-		if value == 5: speed = 20
-		if value == 4: speed = 17
-		if value == 3: speed = 15
-		if value == 2: speed = 12
-		if value == 1: speed = 10
-		arg1 = "" 
-		arg2 = "pan=right&pan.speed=" + str(speed)
-		#print("Value: " + str(value))
-		#print("Speed: " + str(speed))
-		#arg1 = "&pan.speed=" + str(speed)
-		time.sleep(0.05)
-		control_ptz(arg1, arg2)
-
-
-	def on_L2_release(self):
-		arg1 = "zoom=stop"
-		arg2 = ""
-		control_ptz(arg1, arg2)
-		print("Zoom Stop")
-	"""
 
 	def on_R2_press(self, value):
 		arg1 = "zoom=wide"
