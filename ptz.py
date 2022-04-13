@@ -22,7 +22,10 @@ else:
 from pyPS4Controller.controller import Controller
 
 ip = "10.10.10.100"
-speed_list = [10, 40, 75, 300, 600, 1250, 2500, 5000, 7500, 10000]
+#speed_list = [10, 40, 75, 300, 600, 1250, 2500, 5000, 7500, 10000]
+speed_list = [	10, 20, 40, 50, 75, 100, 200, 300, 400, 500, 600, 800,
+				1000, 1250, 1500, 1750, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+zoom_speed = [ 1, 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 i = 4
 speed = 0
 
@@ -81,14 +84,18 @@ def calculate(value):
 		value -= 1
 	return value
 
-	#print("Speedlist is: " + str(speed_list()))
-	#print("Speed Index 0 is: " + str(speed_list([0])))
-	
+def calculate_zoom(value):
+	value = int((value + 32767) / (65534 / len(zoom_speed)))
+	if value == len(zoom_speed):
+		value -= 1
+	return value
+
 class MyController(Controller):
 
 	def __init__(self, **kwargs):
 		Controller.__init__(self, **kwargs)
 		self.last_value = 0
+		self.last_zoom_value = 0
 
 	def on_R3_up(self, value):
 		value = calculate(value)
@@ -97,8 +104,6 @@ class MyController(Controller):
 		self.last_value = value
 		
 		speed_index = value
-		#speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&tilt=up"
 		pt_speed = "&tilt.speed=" + str(pt_speed)
@@ -112,8 +117,6 @@ class MyController(Controller):
 			return
 		self.last_value = value
 		speed_index = value
-		#speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&tilt=down"
 		pt_speed = "&tilt.speed=" + str(pt_speed)
@@ -127,8 +130,6 @@ class MyController(Controller):
 			return
 		self.last_value = value
 		speed_index = value
-		#speed_index = int((-1 * value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&pan=left"
 		pt_speed = "&pan.speed=" + str(pt_speed)
@@ -142,8 +143,6 @@ class MyController(Controller):
 			return
 		self.last_value = value
 		speed_index = value
-		#speed_index = int((value - 1.0) / (32767 / len(speed_list))) #funktioniert
-		#if speed_index == len(speed_list): speed_index -= 1
 		pt_speed = speed_list[speed_index]
 		direction = "&pan=right"
 		pt_speed = "&pan.speed=" + str(pt_speed)
@@ -165,15 +164,9 @@ class MyController(Controller):
 
 	def on_right_arrow_press(self):
 		inc_speed(i)
-		#print(i)
-		#print(speed)
-		#print(str(i) + " multiplied with " + str(speed) + " results in " + str(speed*i))
 
 	def on_left_arrow_press(self):
 		dec_speed(i)
-		print(i)
-		print(speed)
-		print(str(i) + " multiplied with " + str(speed) + " results in " + str(speed*i))
 
 	def on_x_press(self):
 		arg1 = "tilt=down&tilt.speed.mode.list=auto2" 
@@ -236,7 +229,48 @@ class MyController(Controller):
 		arg2 = ""
 		control_ptz(arg1, arg2)
 		print("Stop PTZ camera")
-	
+
+	def on_L2_press(self, value):
+		value = calculate_zoom(value)
+		if self.last_zoom_value == value:
+			return
+		self.last_zoom_value = value
+		speed_index = value
+		z_speed = zoom_speed[speed_index]
+		direction = "zoom=tele"
+		pt_speed = "&zoom.speed.dir=" + str(z_speed)
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
+		command = urlopen(url).read()
+		#print(url)
+		print("Zoom In")
+
+	def on_L2_release(self):
+		direction = "zoom=stop"
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction
+		command = urlopen(url).read()
+		print("Zoom Stop")
+
+	def on_R2_press(self, value):
+		value = calculate_zoom(value)
+		if self.last_zoom_value == value:
+			return
+		self.last_zoom_value = value
+		speed_index = value
+		z_speed = zoom_speed[speed_index]
+		direction = "zoom=wide"
+		pt_speed = "&zoom.speed.dir=" + str(z_speed)
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction + pt_speed
+		command = urlopen(url).read()
+		#print(url)
+		print("Zoom Out")
+
+	def on_R2_release(self):
+		direction = "zoom=stop"
+		url = "http://" + str(ip) + "/-wvhttp-01-/control.cgi?" + direction
+		command = urlopen(url).read()
+		print("Zoom Stop")
+
+'''	
 	def on_L2_press(self, value):
 		arg1 = "zoom=tele" 
 		arg2 = "" 
@@ -260,6 +294,7 @@ class MyController(Controller):
 		arg2 = ""
 		control_ptz(arg1, arg2)
 		print("Zoom Stop")
+'''
 
 controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
 # you can start listening before controller is paired, as long as you pair it within the timeout window
