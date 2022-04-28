@@ -1,0 +1,57 @@
+#Erhalte Standbild von absoluter Angabe
+http://10.10.10.100/-wvhttp-01-/image.cgi?pan=100
+
+#Erhalte Videostream von absoluter Angabe
+http://10.10.10.100/-wvhttp-01-/video.cgi?pan=100
+
+#Absolute Steuerung
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=100
+
+#Funktioniert nicht wie erwartet
+http://10.10.10.100/-wvhttp-01-/meta.cgi?type=once
+
+#Absolute Steuerung mit Pan und Tilt
+http://10.43.10.100/-wvhttp-01-/control.cgi?pan=17000&tilt=2000
+
+
+#Relative Movements
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=right
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=left
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=stop
+
+#Automatic according zoom
+pan.speed.mode.list=auto2
+
+
+# speed Inc Dec
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=right&pan.speed=10
+
+
+
+
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=right&pan.speed.mode.list=auto2
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=left&pan.speed.mode.list=auto2
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=stop
+
+http://10.10.10.100/-wvhttp-01-/control.cgi?tilt=up&tilt.speed.mode.list=auto2
+http://10.10.10.100/-wvhttp-01-/control.cgi?tilt=down&tilt.speed.mode.list=auto2
+http://10.10.10.100/-wvhttp-01-/control.cgi?tilt=stop
+
+
+-wvhttp-01-/control.cgi?pan=left&pan.speed.mode.list=auto2
+
+
+#Infos erhalten
+info.cgi?item=.....
+http://10.10.10.100/-wvhttp-01-/info.cgi?item=c.1.wb.value
+
+
+#Trace
+http://10.10.10.100/-wvhttp-01-/trace/set?cmd=start
+http://<ipddress>/-wvhttp-01-/trace/set?[s=<session- id>][&t=<Value>][&cmd=<Value>][&all=<Value>]
+
+tilt.speed =<int>
+c.<c>.tilt.speed.min... c.<c>.tilt.speed.max e.g. 10...10000
+Tilt speed
+If the parameter is omitted when "all=enabled" or "ptz=enabled" is specified, the maximum speed is set.
+If the parameter is omitted in other cases, the speed does not change.

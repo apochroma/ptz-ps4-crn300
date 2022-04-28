@@ -2,6 +2,7 @@
 
 import sys
 import time
+import re
 
 if sys.version_info[0] == 3:
     from urllib.request import urlopen
@@ -26,6 +27,8 @@ ip = "10.10.10.100"
 speed_list = [	10, 20, 40, 50, 75, 100, 200, 300, 400, 500, 600, 800,
 				1000, 1250, 1500, 1750, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 zoom_speed = [ 1, 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
+exposure_compensation = [ -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2 , 3, 4, 5, 6, 7, 8 ]
+
 i = 4
 speed = 0
 
@@ -64,9 +67,13 @@ def dec_speed(*args):
 
 def info_ptz(arg1):
 	ip = "10.10.10.100"
-	url = "http://" + str(ip) + "/-wvhttp-01-/info.cgi?itme=" + str(arg1)
-	response = urlopen(url).read()
-	print(response)
+	url = "http://" + str(ip) + "/-wvhttp-01-/info.cgi?item=" + str(arg1)
+	response = urlopen(url).read().decode('utf-8')
+	pattern = "c.1.ae.brightness:="
+
+	value = re(pattern, response)
+	print(value)
+	#print(response)
 
 def control_ptz(arg1, arg2):
 	ip = "10.10.10.100"
@@ -205,12 +212,6 @@ class MyController(Controller):
 		arg2 = ""
 		control_ptz(arg1, arg2)
 		print("Move PTZ camera left")
-
-	def on_L3_left(self):
-		arg1 = "pan=left&pan.speed.mode.list=auto2" 
-		arg2 = ""
-		control_ptz(arg1, arg2)
-		print("Move PTZ camera left")
 	
 	def on_square_release(self):
 		arg1 = "pan=stop" 
@@ -229,6 +230,13 @@ class MyController(Controller):
 		arg2 = ""
 		control_ptz(arg1, arg2)
 		print("Stop PTZ camera")
+
+	def on_up_arrow_press(self):
+		info = info_ptz("c.1.ae.brightness")
+		print (info)
+
+
+
 
 	def on_L2_press(self, value):
 		value = calculate_zoom(value)
