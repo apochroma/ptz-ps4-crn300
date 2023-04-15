@@ -23,6 +23,19 @@ http://10.10.10.100/-wvhttp-01-/control.cgi?pan=stop
 pan.speed.mode.list=auto2
 
 
+#pan=v50・Absolute position specification
+#Specify absolute position for pan
+#Expressed by the angle of view (1 = 0.01 degrees), the actual front is specified as 0 #and the right is specified as positive. ・Relative position specification
+#Specify the relative position from the current camera orientation.
+#d: Specify angle of view (1=0.01 degrees)
+#v: Specify standard screen (100=half the screen)
+#    Moves to the right edge as the center of the screen with v100.
+#    Moves to the left edge as the center of the screen with - v100.
+#・Operation specification
+#right: move to the right
+#left: move to the left stop: stop movement
+http://10.10.10.100/-wvhttp-01-/control.cgi?pan=v50
+
 # speed Inc Dec
 http://10.10.10.100/-wvhttp-01-/control.cgi?pan=right&pan.speed=10
 
