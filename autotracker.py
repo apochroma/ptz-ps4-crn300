@@ -8,7 +8,7 @@ urlopen('http://10.10.10.100/-wvhttp-01-/control.cgi?c.1.focus.detect=facecatch'
 face = posX = width = 0
 while True:
 	
-	ramp=2
+	ramp=1
 	deadband = 500
 	absoluteM = 5000
 	tracking = False
